@@ -127,6 +127,8 @@ console.log(arr);
 
 const print5day = () => {
     console.log(arr.length)
+    // $("#forecast").append("<h5>").text("5-day forecast");
+    $("#header").text("5-day Forecast")
     for(let i = 0; i < arr.length; i++) {
         
         let dates = moment().add([i+1],'days').format("DD/MM/YYYY");
