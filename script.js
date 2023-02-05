@@ -20,6 +20,8 @@ let arr = [];
 $("#search-button").on("click", function(event) {
 $("#today").empty();
 
+
+// $("#forecast div").empty()
 event.preventDefault();
 
 let searchVal = search.val().trim()
@@ -99,7 +101,7 @@ createforecast()
 const createforecast = () => {
     // $("#forecast").text("hello")
     //  let forecast = $("#forecast");
-
+   
     //  for(let i = 1; i < results.length )
     //  let days = moment().add(1,'days').format("DD/MM/YYYY")
     //  console.log(days)
@@ -125,18 +127,39 @@ print5day();
 // console.log(results);
 console.log(arr);
 
+
 const print5day = () => {
+    
     console.log(arr.length)
+    
     // $("#forecast").append("<h5>").text("5-day forecast");
     $("#header").text("5-day Forecast")
     for(let i = 0; i < arr.length; i++) {
         
+        
         let dates = moment().add([i+1],'days').format("DD/MM/YYYY");
         let p = $("<p>").text(dates);
         let card = $(`#day${i}`).append(p);
+
         // card.append(dates)
         // $("#forecast").append(divs);
-        
+
+        let temp = arr[i].main.temp - 273.15
+        // console.log(arr[0].main.temp);
+        let currTemp = temp.toFixed(2) + `\u00B0` + " C"
+        let pic = arr[i].weather[0].icon;
+        let currSpeed = arr[i].wind.speed * 2.237
+        let hum = arr[i].main.humidity;
+        let weatherpic = $("<img>").attr("src", `http://openweathermap.org/img/wn/${pic}@2x.png`)
+        // let cityN = $('<h1>').text(response.city.name + todaysDate).append(weatherIcon);
+        let currDetails = $("<p>").text("Temp: " + currTemp);
+        let speedEl = $("<p>").text("Wind: " + currSpeed + " MPH");
+        let humEl = $("<p>").text("Humidity: " + hum + "%")
+        $(`#day${i}`).append(weatherpic,currDetails, speedEl, humEl);
 };
 
-}
+
+
+};
+
+
