@@ -17,8 +17,14 @@ let arr = [];
 //  localStorage.setItem("city name", JSON.stringify(search));
 // });
 
-$("#search-button").on("click", function(event) {
+ 
+
+$("#search-button").on("click", function(event) { 
 $("#today").empty();
+arr = [];
+// $("#forecast").empty()
+
+// clear()
 
 
 // $("#forecast div").empty()
@@ -99,6 +105,7 @@ createforecast()
 });
 
 const createforecast = () => {
+    
     // $("#forecast").text("hello")
     //  let forecast = $("#forecast");
    
@@ -116,7 +123,7 @@ const createforecast = () => {
      }
 // console.log(word)
 
-
+// $("#forecast").empty();
 }
 console.log(arr);
 
@@ -131,16 +138,24 @@ console.log(arr);
 const print5day = () => {
     
     console.log(arr.length)
-    
     // $("#forecast").append("<h5>").text("5-day forecast");
-    $("#header").text("5-day Forecast")
+    let containerDiv = $("<div>").addClass("container")
+    // $("#header").text("5-day Forecast")
+    let header = $("<h5>").attr("id", "header").addClass("text-left").text("5-day Forecast")
+    header.text("5-day Forecast")
+    let newDiv = $("<div>").addClass("row text-left");
+    $("#forecast").append(header,containerDiv,newDiv);
+    
+
+    // <h5 id="header" class="text-left"></h5>
     for(let i = 0; i < arr.length; i++) {
         
-        
+       
+    let forecastDiv = $("<div>").addClass("col-sm").attr("id", `day${i}`);
+    newDiv.append(forecastDiv);
         let dates = moment().add([i+1],'days').format("DD/MM/YYYY");
         let p = $("<p>").text(dates);
-        let card = $(`#day${i}`).append(p);
-
+        $(`#day${i}`).prepend(p)
         // card.append(dates)
         // $("#forecast").append(divs);
 
@@ -159,7 +174,18 @@ const print5day = () => {
 };
 
 
-
 };
 
+// $("#forecast").empty() 
 
+// function clear() {
+//     $("#forecast").empty();
+//   }
+
+// document.querySelector("#today").addEventListener("click", function() {
+//     document.querySelector("#today").innerHTML = "";
+//   });
+  
+//   document.querySelector("#forecast").addEventListener("click", function() {
+//     document.querySelector("#forecast").innerHTML = "";
+//   });
