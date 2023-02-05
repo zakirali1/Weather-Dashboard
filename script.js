@@ -22,7 +22,7 @@ let arr = [];
 $("#search-button").on("click", function(event) { 
 $("#today").empty();
 arr = [];
-// $("#forecast").empty()
+$("#forecast").empty()
 
 // clear()
 
@@ -144,7 +144,8 @@ const print5day = () => {
     let header = $("<h5>").attr("id", "header").addClass("text-left").text("5-day Forecast")
     header.text("5-day Forecast")
     let newDiv = $("<div>").addClass("row text-left");
-    $("#forecast").append(header,containerDiv,newDiv);
+    containerDiv.append(newDiv);
+    $("#forecast").append(header,containerDiv);
     
 
     // <h5 id="header" class="text-left"></h5>
