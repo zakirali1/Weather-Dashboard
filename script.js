@@ -1,4 +1,5 @@
-// $(document).ready(function() {
+$(document).ready(function() {
+    $(".list-group .listButtons").val(localStorage.getItem("city"))
 
 let search = $("#search-input")
 let today = $("#today");
@@ -18,11 +19,10 @@ let arr = [];
 // });
 
  
+ 
 
 $("#search-button").on("click", function(event) { 
-$("#today").empty();
-arr = [];
-$("#forecast").empty()
+
 
 // clear()
 
@@ -33,6 +33,25 @@ event.preventDefault();
 let searchVal = search.val().trim()
 localStorage.setItem("city name", JSON.stringify(searchVal));
 $("search-input").val(localStorage.getItem("city name"));
+
+apiCall(searchVal);
+buttonCreate(searchVal);
+})
+
+const buttonCreate = names => {
+
+    let list = $(".list-group");
+    let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
+    list.append(buttons);
+    localStorage.setItem("city", JSON.stringify(`${names}`));
+}
+
+const apiCall = searchValues => { 
+
+$("#today").empty();
+arr = [];
+$("#forecast").empty()
+
 // localStorage.getItem("city name")
 
 let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
@@ -40,7 +59,7 @@ let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
 let api = "&appid=6a1c1f77dd62fe1efb6093d9ffc4bee5"
 
 $.ajax({
-    url: queryURL + searchVal + api,
+    url: queryURL + searchValues + api,
     method: "GET"
 }).then(function(response) {
     console.log(response)
@@ -102,7 +121,13 @@ $.ajax({
 createforecast()
 });
 
-});
+};
+
+
+
+// const buttonCreate = inputsV => {
+
+// }
 
 const createforecast = () => {
     
@@ -177,6 +202,14 @@ const print5day = () => {
 
 };
 
+$(document).on("click", ".listButtons", function(event) {
+  
+    event.preventDefault();
+    let buttonText = $(this).text();
+    console.log(buttonText);
+    apiCall(buttonText)
+})
+
 // $("#forecast").empty() 
 
 // function clear() {
@@ -190,3 +223,5 @@ const print5day = () => {
 //   document.querySelector("#forecast").addEventListener("click", function() {
 //     document.querySelector("#forecast").innerHTML = "";
 //   });
+
+});
