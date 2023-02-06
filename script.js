@@ -1,94 +1,90 @@
-$(document).ready(function() {
-    $(".list-group .listButtons").val(localStorage.getItem("city"))
 
-   
+// manipulate DOM once page loads and safe to do so
+$(document).ready(function() {
+
+// setting my global variables
+
+// load my values from local storage if it exists otherwise create an empty array
 let cities = JSON.parse(localStorage.getItem("cities")) || [];
-let search = $("#search-input")
+
+// grab my ID's from DOM
+let search = $("#search-input");
 let today = $("#today");
 let fiveday = $("#forecast");
 let results;
 let arr = [];
-//  .val()
-//  .trim();
+//  console.log(search);
 
- console.log(search);
- let todaysDate = moment().format(" \(DD/MM/YYYY)")
- console.log(todaysDate)
-//  let tomorro = moment().add(1,'days').format("DD MM YYYY");
-//  console.log(tomorro)
+// use momentJS to set time and format to how I need it
+ let todaysDate = moment().format(" \(DD/MM/YYYY)");
+ console.log(todaysDate);
 
-//  localStorage.setItem("city name", JSON.stringify(search));
-// });
+// my buttons create function 
 
 const buttonCreate = names => {
+    // first empty the list group dynamic elements
     $(".list-group").empty();
+    // loop through my cities array and pass in values from my call below
         cities.forEach(function(names){
-           
-           if(cities.indexOf(names) !== 1) {
+
+         // create my buttons and classes dynamically
             let list = $(".list-group");
         let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
         list.append(buttons);
-           }
-           
+            
         })
         
-        // let list = $(".list-group");
-        // let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
-        // list.append(buttons);
-        // localStorage.setItem("city", JSON.stringify(`${names}`));
+      
     }
 
-    buttonCreate();
+    // buttonCreate();
  
-
+// my search button function
 $("#search-button").on("click", function(event) { 
 
-
-// clear()
-
-
-// $("#forecast div").empty()
+    //  prevent load on click
 event.preventDefault();
 
+// take the value of search value variable and trim white spaces beginning and end
 let searchVal = search.val().trim()
 
-$("search-input").val(localStorage.getItem("city name"));
+// if the element in cities array doesnt exist push to my input value to my array
+if(!cities.includes(searchVal)) {
 cities.push(searchVal);
+// set local storage to save the values
 localStorage.setItem("cities", JSON.stringify(cities));
+}
+// call api call with and pass in search value in text box, same with button create
 apiCall(searchVal);
 buttonCreate(searchVal);
+
 });
 
+// my api call function, taking in the value from above and using to create my queryURL dynamically
 const apiCall = searchValues => { 
 
+// empty today section, array and forecast, to avoid appending data instead of updating
 $("#today").empty();
 arr = [];
 $("#forecast").empty()
 
-// localStorage.getItem("city name")
+// api URL
 
 let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
 
+//  my API key
 let api = "&appid=6a1c1f77dd62fe1efb6093d9ffc4bee5"
 
+// ajax call
 $.ajax({
     url: queryURL + searchValues + api,
     method: "GET"
 }).then(function(response) {
-    console.log(response)
-    // console.log(response.list[0].main.temp);
-    // console.log(response.list[0].wind.speed)
-    // console.log(response.list[0].main.humidity)
+    // console.log(response)
  
+    // save reponse object to global variable for later manipulation without relying on ajax call. this will track response object each time
+    // new calls are made
     results = response;
-// console.log(results)
-// console.log(response.list[0].dt_txt)
-// console.log(response.list[3].dt_txt)
-// // })
-
-// console.log(results.list.clouds.dt_txt)
-// console.log(results);
-//  console.log(results);
     
     // store temp in variable
     let mainTemp = response.list[0].main.temp - 273.15
@@ -121,62 +117,37 @@ $.ajax({
     // append to today section
     $('#today').prepend(cityN)
     $('#today').append(details, winds, humid);
-    // localStorage.setItem('today', JSON.stringify(today));
-    
-
-//   for (let i = 1; i < results.length; i++) {
-  
-//     let header = $("<h5>").text(moment().add(results[i],'days').format("DD/MM/YYYY"));
-//     console.log(header)
-//     $("#forecast").append(header)
-//   }
-
+      
+    // call create forecast after creating the elements and content for the today's section
 createforecast()
 });
 
 };
 
-
-
-// const buttonCreate = inputsV => {
-
-// }
-
+// my 5 day forecast function
 const createforecast = () => {
     
-    // $("#forecast").text("hello")
-    //  let forecast = $("#forecast");
-   
-    //  for(let i = 1; i < results.length )
-    //  let days = moment().add(1,'days').format("DD/MM/YYYY")
-    //  console.log(days)
-    //  let header = $("<h5>").text(days);
-    //  forecast.append(header)
-
+    // using loop to create content from results array and filtering to get one value from each day. filtering using dt_text
      for(let i = 1; i < results.list.length; i++){
-     let word = results.list[i].dt_txt.slice(" ").includes("09:00:00")
+        // spliting the text and filtering on 09:00 value as unique to each array elment 
+     let word = results.list[i].dt_txt.slice(" ").includes("09:00:00");
      if(word) {
     arr.push(results.list[i]);
 
-     }
-// console.log(word)
+     };
+};
 
-// $("#forecast").empty();
-}
-console.log(arr);
-
+// call next function
 print5day();
 
 };
 
-// console.log(results);
-console.log(arr);
-
-
+// function for printing the forecast
 const print5day = () => {
     
-    console.log(arr.length)
-    // $("#forecast").append("<h5>").text("5-day forecast");
+    // console.log(arr.length)
+    
+    // creating my dynamic element content
     let containerDiv = $("<div>").addClass("container")
     // $("#header").text("5-day Forecast")
     let header = $("<h5>").attr("id", "header").addClass("text-left").text("5-day Forecast")
@@ -186,20 +157,19 @@ const print5day = () => {
     $("#forecast").append(header,containerDiv);
     
 
-    // <h5 id="header" class="text-left"></h5>
+    // using loop to create for each day
     for(let i = 0; i < arr.length; i++) {
         
        
     let forecastDiv = $("<div>").addClass("col-sm").attr("id", `day${i}`);
     newDiv.append(forecastDiv);
+    // using moment to manipulate date to present on app
         let dates = moment().add([i+1],'days').format("DD/MM/YYYY");
         let p = $("<p>").text(dates);
         $(`#day${i}`).prepend(p)
-        // card.append(dates)
-        // $("#forecast").append(divs);
-
+        
+        // creating my dynamic elements using same template for today's content
         let temp = arr[i].main.temp - 273.15
-        // console.log(arr[0].main.temp);
         let currTemp = temp.toFixed(2) + `\u00B0` + " C"
         let pic = arr[i].weather[0].icon;
         let currSpeed = arr[i].wind.speed * 2.237
@@ -215,26 +185,14 @@ const print5day = () => {
 
 };
 
+// click handle function for listbuttons class
 $(document).on("click", ".listButtons", function(event) {
   
     event.preventDefault();
     let buttonText = $(this).text();
     console.log(buttonText);
     apiCall(buttonText)
-})
+});
 
-// $("#forecast").empty() 
-
-// function clear() {
-//     $("#forecast").empty();
-//   }
-
-// document.querySelector("#today").addEventListener("click", function() {
-//     document.querySelector("#today").innerHTML = "";
-//   });
-  
-//   document.querySelector("#forecast").addEventListener("click", function() {
-//     document.querySelector("#forecast").innerHTML = "";
-//   });
 
 });
