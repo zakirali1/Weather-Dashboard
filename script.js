@@ -1,6 +1,8 @@
 $(document).ready(function() {
     $(".list-group .listButtons").val(localStorage.getItem("city"))
 
+   
+let cities = JSON.parse(localStorage.getItem("cities")) || [];
 let search = $("#search-input")
 let today = $("#today");
 let fiveday = $("#forecast");
@@ -18,7 +20,25 @@ let arr = [];
 //  localStorage.setItem("city name", JSON.stringify(search));
 // });
 
- 
+const buttonCreate = names => {
+    $(".list-group").empty();
+        cities.forEach(function(names){
+           
+           if(cities.indexOf(names) !== 1) {
+            let list = $(".list-group");
+        let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
+        list.append(buttons);
+           }
+           
+        })
+        
+        // let list = $(".list-group");
+        // let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
+        // list.append(buttons);
+        // localStorage.setItem("city", JSON.stringify(`${names}`));
+    }
+
+    buttonCreate();
  
 
 $("#search-button").on("click", function(event) { 
@@ -31,20 +51,13 @@ $("#search-button").on("click", function(event) {
 event.preventDefault();
 
 let searchVal = search.val().trim()
-localStorage.setItem("city name", JSON.stringify(searchVal));
-$("search-input").val(localStorage.getItem("city name"));
 
+$("search-input").val(localStorage.getItem("city name"));
+cities.push(searchVal);
+localStorage.setItem("cities", JSON.stringify(cities));
 apiCall(searchVal);
 buttonCreate(searchVal);
-})
-
-const buttonCreate = names => {
-
-    let list = $(".list-group");
-    let buttons = $("<button>").attr(`value`, `${names}`).addClass("listButtons").text(`${names}`)
-    list.append(buttons);
-    localStorage.setItem("city", JSON.stringify(`${names}`));
-}
+});
 
 const apiCall = searchValues => { 
 
