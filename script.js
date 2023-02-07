@@ -7,6 +7,8 @@ $(document).ready(function() {
 // load my values from local storage if it exists otherwise create an empty array
 let cities = JSON.parse(localStorage.getItem("cities")) || [];
 
+
+
 // grab my ID's from DOM
 let search = $("#search-input");
 let today = $("#today");
@@ -34,10 +36,10 @@ const buttonCreate = names => {
             
         })
         
-      
+        
     }
 
-    // buttonCreate();
+    buttonCreate();
  
 // my search button function
 $("#search-button").on("click", function(event) { 
